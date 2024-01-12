@@ -1,5 +1,12 @@
 import { useContext } from "react";
-import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { AppContext } from "../utils/store";
 import days from "../constants/days";
 import Colors from "../constants/colors.json";
@@ -12,7 +19,7 @@ const TimeLine = ({ navigation }) => {
       id: id,
     });
   };
-  const renderJournal = ({ id, journal, dateAndTime }) => (
+  const renderJournal = ({ id, journal, dateAndTime, image, location }) => (
     <Pressable
       key={id}
       style={[styles.innerContainer]}
@@ -35,6 +42,10 @@ const TimeLine = ({ navigation }) => {
             hour12: true,
           })}
         </Text>
+        <Text style={[{ color: "lightgray" }]}>{location}</Text>
+      </View>
+      <View>
+        <Image style={{ width: 50, height: 50 }} source={{ uri: image }} />
       </View>
     </Pressable>
   );
@@ -82,6 +93,7 @@ const styles = StyleSheet.create({
   journalCntnr: {
     marginLeft: 10,
     flexDirection: "column",
+    flex: 1,
   },
 });
 export default TimeLine;

@@ -1,13 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import {
-  Appearance,
-  Button,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  useColorScheme,
-} from "react-native";
+import { Button, StyleSheet, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import TimeLine from "./screens/TimeLine";
@@ -28,9 +20,6 @@ const Stack = createStackNavigator();
 export default function App() {
   const sysTheme = useColorScheme();
   const [theme, setTheme] = useState("dark");
-  // useEffect(() => {
-  //   setTheme(sysTheme);
-  // }, [sysTheme]);
   function AddJournalModal() {
     return (
       <Tab.Navigator

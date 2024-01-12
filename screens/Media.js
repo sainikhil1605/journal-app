@@ -2,52 +2,69 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import IconButton from "../components/IconButton";
 import Colors from "../constants/colors.json";
 import { AppContext } from "../utils/store";
-import { useContext } from "react";
-import {
-  launchCameraAsync,
-  useCameraPermissions,
-  PermissionStatus,
-} from "expo-image-picker";
-import * as ImagePicker from "expo-image-picker";
-const Media = () => {
+import { useContext, useState } from "react";
+import ImagePicker from "../components/ImagePicker";
+import Camera from "../components/Camera";
+const Media = ({ navigation }) => {
   const { theme } = useContext(AppContext);
-  const handlePress = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+  const [image, setImage] = useState(null);
 
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    } else {
-      console.log("cancelled");
-    }
-  };
-  const handleCamera = async () => {
-    try {
-      const result = await ImagePicker.launchCamera();
-    } catch (e) {
-      console.log(e);
-    }
+  const onTakeImage = () => {
+    navigation.navigate("AddJournal", {
+      image: image,
+    });
   };
   return (
     <View
       style={[styles.container, { backgroundColor: Colors[theme].background }]}
     >
-      <IconButton
-        name="images-outline"
-        color="black"
-        size={100}
-        onPress={handlePress}
-      />
-      <IconButton
-        name="camera-outline"
-        color="black"
-        size={100}
-        onPress={handleCamera}
-      />
+      <View
+        style={{
+          alignItems: "center",
+        }}
+      >
+        <ImagePicker
+          name="image-outline"
+          setImage={setImage}
+          size={55}
+          style={{
+            borderRightWidth: 1,
+            borderRightColor: "gray",
+            paddingLeft: 25,
+            paddingRight: 25,
+          }}
+          type="Images"
+          onTakeImage={onTakeImage}
+        />
+      </View>
+      <View
+        style={{
+          alignItems: "center",
+          justifyItems: "center",
+        }}
+      >
+        <ImagePicker
+          name="videocam-outline"
+          color="black"
+          size={55}
+          style={{
+            borderRightWidth: 1,
+            borderRightColor: "gray",
+            paddingLeft: 25,
+            paddingRight: 25,
+          }}
+          type="Videos"
+          onTakeImage={onTakeImage}
+          setImage={setImage}
+        />
+      </View>
+      <View
+        style={{
+          alignItems: "center",
+        }}
+      >
+        <Camera setImage={setImage} onTakeImage={onTakeImage} />
+      </View>
     </View>
   );
 };
@@ -55,7 +72,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-evenly",
+    paddingTop: 5,
   },
 });
 export default Media;

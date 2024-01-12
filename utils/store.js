@@ -4,12 +4,21 @@ const AppContext = createContext({
   theme: "light",
   setTheme: () => {},
   journals: [],
-  setJournals: () => {},  
+  setJournals: () => {},
+  location: null,
+  setLocation: () => {},
 });
 
 const AppProvider = ({ value, children }) => {
   const [journals, setJournals] = useState([]);
-  return <AppContext.Provider value={{...value,journals,setJournals}}>{children}</AppContext.Provider>;
+  const [location, setLocation] = useState(null);
+  return (
+    <AppContext.Provider
+      value={{ ...value, journals, setJournals, location, setLocation }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
 };
 
 export { AppContext, AppProvider };

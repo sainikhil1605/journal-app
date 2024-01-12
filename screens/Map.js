@@ -1,14 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import { AppContext } from "../utils/store";
 import {
   getCurrentPositionAsync,
   useForegroundPermissions,
   PermissionStatus,
+  reverseGeocodeAsync,
 } from "expo-location";
-const Map = () => {
-  const { theme } = useContext(AppContext);
+const Map = ({ navigation }) => {
+  const { theme, setLocation } = useContext(AppContext);
   const [locationPermissionInfo, requestPermission] =
     useForegroundPermissions();
 
@@ -32,32 +33,73 @@ const Map = () => {
       const hasPermission = await verifyPermissions();
       if (hasPermission) {
         const location = await getCurrentPositionAsync();
-        setUserLocation({
-          lat: location.coords.latitude,
-          lng: location.coords.longitude,
+        const address = await reverseGeocodeAsync({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
         });
+        setUserLocation({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
+
+        setLocation(
+          address[0].name + " " + address[0].city + " " + address[0].region
+        );
       }
     };
     getUserLocation();
   }, []);
+  const selectLocationHandler = async (event) => {
+    setUserLocation({
+      latitude: event.nativeEvent.coordinate.latitude,
+      longitude: event.nativeEvent.coordinate.longitude,
+    });
+    const address = await reverseGeocodeAsync({
+      latitude: event.nativeEvent.coordinate.latitude,
+      longitude: event.nativeEvent.coordinate.longitude,
+    });
+
+    Alert.alert(
+      address[0].name + " " + address[0].city + " " + address[0].region,
+      "Create a new Entry for this location?",
+      [
+        {
+          text: "Yes",
+          onPress: () => {
+            setLocation(
+              address[0].name + " " + address[0].city + " " + address[0].region
+            );
+            navigation.navigate("AddJournal");
+          },
+        },
+        {
+          text: "No",
+          onPress: () => {
+            setUserLocation(null);
+          },
+        },
+      ]
+    );
+  };
 
   return (
     <MapView
       style={styles.mapView}
       userInterfaceStyle={theme}
-      initialRegion={
-        userLocation
-          ? {
-              latitude: userLocation.lat,
-              longitude: userLocation.lng,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }
-          : undefined
-      }
       showsUserLocation
+      showsScale
       userLocationAnnotationTitle="You are here"
-    />
+      onPress={selectLocationHandler}
+    >
+      {userLocation?.latitude && (
+        <Marker
+          coordinate={{
+            ...userLocation,
+          }}
+          title="Your Location"
+        />
+      )}
+    </MapView>
   );
 };
 export default Map;
