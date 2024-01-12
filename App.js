@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import {
   Appearance,
   Button,
+  SafeAreaView,
   StyleSheet,
   Text,
   View,
