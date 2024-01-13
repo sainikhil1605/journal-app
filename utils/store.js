@@ -2,7 +2,6 @@ import { createContext, useState } from "react";
 
 const AppContext = createContext({
   theme: "light",
-  setTheme: () => {},
   journals: [],
   setJournals: () => {},
   location: null,

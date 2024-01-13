@@ -95,6 +95,7 @@ const Map = ({ navigation }) => {
   useEffect(() => {
     const temp = [];
     journals.forEach((item) => {
+      if (!item.latAndLong) return;
       const ind = temp.findIndex(
         (tempItem) => tempItem.location === item.location
       );

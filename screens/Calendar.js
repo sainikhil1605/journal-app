@@ -7,7 +7,6 @@ import { formatDate } from "../utils/date";
 const Calendar = ({ navigation }) => {
   const { journals, theme } = useContext(AppContext);
   const markedDates = {};
-  const [showModal, setShowModal] = useState(false);
   journals.forEach((item) => {
     markedDates[formatDate(new Date(item.dateAndTime))] = {
       selected: true,
@@ -15,16 +14,8 @@ const Calendar = ({ navigation }) => {
       color: "blue",
       elevation: 2,
       marking: "rectangle",
-      customStyles: {
-        container: {
-          border: 0,
-        },
-      },
     };
   });
-  const handleSubmit = () => {
-    setShowModal(false);
-  };
 
   return (
     <View>
@@ -34,6 +25,14 @@ const Calendar = ({ navigation }) => {
         }
         markedDates={{
           ...markedDates,
+        }}
+        theme={{
+          calendarBackground: "black",
+          textSectionTitleColor: "#b6c1cd",
+          selectedDayBackgroundColor: "blue",
+          selectedDayTextColor: "#ffffff",
+          todayTextColor: "#00adf5",
+          dayTextColor: "white",
         }}
       />
     </View>

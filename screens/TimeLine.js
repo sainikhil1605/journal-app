@@ -12,40 +12,92 @@ import { days } from "../constants/days";
 import Colors from "../constants/colors.json";
 import LineSeperator from "../components/LineSeperator";
 import { formatTimeTo12Hr } from "../utils/date";
+import { Swipeable } from "react-native-gesture-handler";
+import IconButton from "../components/IconButton";
 
 const TimeLine = ({ navigation }) => {
-  const { journals, theme } = useContext(AppContext);
+  const { journals, theme, setJournals } = useContext(AppContext);
   const handlePress = (id) => {
     navigation.navigate("AddJournal", {
       id: id,
     });
   };
+  const handleSwipe = (direction, id) => {
+    const index = journals.findIndex((item) => item.id === id);
+    if (direction === "right") {
+      journals.splice(index, 1);
+      setJournals([...journals]);
+    }
+  };
+  const LeftSwipeActions = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: "#ccffbd",
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: "#40394a",
+            paddingHorizontal: 10,
+            fontWeight: "600",
+            paddingHorizontal: 30,
+            paddingVertical: 20,
+          }}
+        >
+          Bookmark
+        </Text>
+      </View>
+    );
+  };
+  const rightSwipeActions = () => {
+    return (
+      <View
+        style={{
+          backgroundColor: "red",
+          justifyContent: "center",
+          alignItems: "center",
+          minWidth: 100,
+        }}
+      >
+        <IconButton name="trash-outline" size={30} color="black" />
+      </View>
+    );
+  };
   const renderJournal = ({ id, journal, dateAndTime, image, location }) => (
-    <Pressable
-      key={id}
-      style={[styles.innerContainer]}
-      onPress={() => handlePress(id)}
+    <Swipeable
+      renderLeftActions={LeftSwipeActions}
+      renderRightActions={rightSwipeActions}
+      onSwipeableOpen={(direction) => handleSwipe(direction, id)}
     >
-      <View style={[styles.dateCntnr]}>
-        <Text style={[{ color: Colors[theme].color }]}>
-          {days[new Date(dateAndTime).getDay()]}
-        </Text>
-        <Text style={[{ color: Colors[theme].color }]}>
-          {new Date(dateAndTime).getDate()}
-        </Text>
-      </View>
-      <View style={[styles.journalCntnr]}>
-        <Text style={[{ color: Colors[theme].color }]}>{journal}</Text>
-        <Text style={[{ color: Colors[theme].color }]}>
-          {formatTimeTo12Hr(dateAndTime)}
-        </Text>
-        <Text style={[{ color: "lightgray" }]}>{location}</Text>
-      </View>
-      <View>
-        <Image style={{ width: 50, height: 50 }} source={{ uri: image }} />
-      </View>
-    </Pressable>
+      <Pressable
+        key={id}
+        style={[styles.innerContainer]}
+        onPress={() => handlePress(id)}
+      >
+        <View style={[styles.dateCntnr]}>
+          <Text style={[{ color: Colors[theme].color }]}>
+            {days[new Date(dateAndTime).getDay()]}
+          </Text>
+          <Text style={[{ color: Colors[theme].color }]}>
+            {new Date(dateAndTime).getDate()}
+          </Text>
+        </View>
+        <View style={[styles.journalCntnr]}>
+          <Text style={[{ color: Colors[theme].color }]}>{journal}</Text>
+          <Text style={[{ color: Colors[theme].color }]}>
+            {formatTimeTo12Hr(dateAndTime)}
+          </Text>
+          <Text style={[{ color: "lightgray" }]}>{location}</Text>
+        </View>
+        <View>
+          <Image style={{ width: 50, height: 50 }} source={{ uri: image }} />
+        </View>
+      </Pressable>
+    </Swipeable>
   );
+
   return (
     <View
       style={[

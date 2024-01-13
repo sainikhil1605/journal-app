@@ -20,20 +20,21 @@ const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 export default function App() {
-  const sysTheme = useColorScheme();
-  const [theme, setTheme] = useState("dark");
+  const theme = useColorScheme();
+
   LogBox.ignoreAllLogs();
+
   function AddJournalModal() {
     return (
       <Tab.Navigator
         screenOptions={{
           tabBarStyle: {
-            backgroundColor: Colors[theme].background,
-            borderTopColor: theme === "dark" ? "#000" : "#fff",
-            borderTopWidth: 1,
+            backgroundColor: "#333333",
+            // borderTopColor: theme === "dark" ? "#000" : "#fff",
+            // borderTopWidth: 1,
           },
           headerStyle: {
-            backgroundColor: Colors[theme].background,
+            backgroundColor: "#333333",
           },
           headerTintColor: Colors[theme].color,
           tabBarIconStyle: {
@@ -119,7 +120,6 @@ export default function App() {
       <AppProvider
         value={{
           theme,
-          setTheme,
         }}
       >
         <NavigationContainer>

@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Modal, View, Text, StyleSheet } from "react-native";
+import { Modal, View, Text, StyleSheet, StatusBar } from "react-native";
 import { Card, List } from "react-native-paper";
 import { AppContext } from "../utils/store";
 import { formatDate, formatTimeTo12Hr } from "../utils/date";
@@ -29,62 +29,66 @@ const DayModal = ({ navigation, route }) => {
     );
   };
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: "black",
-        paddingTop: 50,
-      }}
-    >
+    <>
+      <StatusBar style={theme === "dark" ? "light" : "light"} />
+
       <View
         style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          alignContent: "center",
+          flex: 1,
+          backgroundColor: "black",
+          paddingTop: 50,
         }}
       >
-        <IconButton
-          size={30}
-          name="add-outline"
-          onPress={() =>
-            navigation.navigate("AddJournal", { date: day.dateString })
-          }
-        />
-        <Text style={[styles.text, { fontSize: 25 }]}>Journal</Text>
-        <Button title="Done" onPress={() => handleSubmit()} />
-      </View>
-      <View style={{ color: "white", margin: 10, backgroundColor: "black" }}>
-        <Card
-          mode="outlined"
-          theme={{ roundness: 3 }}
-          style={{ backgroundColor: "#333333" }}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            alignContent: "center",
+          }}
         >
-          <List.Section>
-            <List.Accordion
-              style={{ backgroundColor: "#333333" }}
-              title={`${selectedJournals.length} Entries`}
-              titleStyle={{ color: "white" }}
-            >
-              {selectedJournals.map((item) => {
-                return (
-                  <List.Item
-                    key={item.id}
-                    titleStyle={{ color: "white" }}
-                    title={item.journal}
-                    style={{ paddinTop: 10 }}
-                    onPress={() =>
-                      navigation.navigate("AddJournal", { id: item.id })
-                    }
-                    description={() => renderDescription(item.dateAndTime)}
-                  />
-                );
-              })}
-            </List.Accordion>
-          </List.Section>
-        </Card>
+          <IconButton
+            size={30}
+            name="add-outline"
+            onPress={() =>
+              navigation.navigate("AddJournal", { date: day.dateString })
+            }
+          />
+          <Text style={[styles.text, { fontSize: 25 }]}>Journal</Text>
+          <Button title="Done" onPress={() => handleSubmit()} />
+        </View>
+        <View style={{ color: "white", margin: 10, backgroundColor: "black" }}>
+          <Card
+            mode="outlined"
+            theme={{ roundness: 3 }}
+            style={{ backgroundColor: "#333333" }}
+          >
+            <List.Section>
+              <List.Accordion
+                style={{ backgroundColor: "#333333" }}
+                title={`${selectedJournals.length} Entries`}
+                titleStyle={{ color: "white" }}
+              >
+                {selectedJournals.map((item) => {
+                  return (
+                    <List.Item
+                      key={item.id}
+                      titleStyle={{ color: "white" }}
+                      title={item.journal}
+                      style={{ paddinTop: 10 }}
+                      onPress={() =>
+                        navigation.navigate("AddJournal", { id: item.id })
+                      }
+                      description={() => renderDescription(item.dateAndTime)}
+                    />
+                  );
+                })}
+              </List.Accordion>
+            </List.Section>
+          </Card>
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 export default DayModal;

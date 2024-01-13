@@ -4,9 +4,13 @@ import {
   useCameraPermissions,
 } from "expo-image-picker";
 import IconButton from "./IconButton";
+import Colors from "../constants/colors.json";
+import { useContext } from "react";
+import { AppContext } from "../utils/store";
 
 const Camera = ({ setImage, onTakeImage, size }) => {
   const [cameraPermissionInfo, requestPermission] = useCameraPermissions();
+  const { theme } = useContext(AppContext);
   const verifyPermissions = async () => {
     if (cameraPermissionInfo.status === PermissionStatus.UNDETERMINED) {
       const permissionResponse = await requestPermission();
@@ -35,7 +39,6 @@ const Camera = ({ setImage, onTakeImage, size }) => {
   return (
     <IconButton
       name="camera-outline"
-      color="black"
       size={size || 55}
       style={{
         paddingLeft: 25,

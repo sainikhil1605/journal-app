@@ -29,7 +29,6 @@ const ImagePicker = ({
   return (
     <IconButton
       name={name}
-      color="black"
       size={size}
       style={style}
       onPress={() => handlePress(type)}
