@@ -28,7 +28,8 @@ const AddJournal = ({ navigation, route }) => {
   const [journal, setJournal] = useState("");
   const insets = useSafeAreaInsets();
   const params = route?.params;
-  const { theme, setJournals, journals, location } = useContext(AppContext);
+  const { theme, setJournals, journals, location, latAndLong } =
+    useContext(AppContext);
   const [image, setImage] = useState(null);
   const handleSubmit = () => {
     if (journal) {
@@ -40,6 +41,7 @@ const AddJournal = ({ navigation, route }) => {
                 ...item,
                 journal: journal.trim(),
                 ...(image && { image: image }),
+                ...(latAndLong && { latAndLong: latAndLong }),
               };
             }
             return item;
@@ -55,6 +57,7 @@ const AddJournal = ({ navigation, route }) => {
               ? { dateAndTime: new Date(params?.date) }
               : { dateAndTime: new Date() }),
             ...(image && { image: image }),
+            ...(latAndLong && { latAndLong: latAndLong }),
             location: location,
           },
         ]);
@@ -99,7 +102,7 @@ const AddJournal = ({ navigation, route }) => {
       onPress: () => console.log("trash"),
     },
   ];
-  console.log(params?.date);
+
   return (
     <SafeAreaView style={{ paddingTop: insets.top, flex: 1 }}>
       <StatusBar style={theme === "dark" ? "dark" : "light"} />

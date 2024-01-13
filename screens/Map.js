@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { AppContext } from "../utils/store";
 import {
@@ -52,7 +52,7 @@ const Map = ({ navigation }) => {
       }
     };
     getUserLocation();
-  }, []);
+  }, [journals]);
   const selectLocationHandler = async (event) => {
     const lat = event.nativeEvent.coordinate.latitude;
     const long = event.nativeEvent.coordinate.longitude;
@@ -91,7 +91,24 @@ const Map = ({ navigation }) => {
       ]
     );
   };
-  console.log(journals);
+  const [parsedMarkers, setParsedMarkers] = useState([]);
+  useEffect(() => {
+    const temp = [];
+    journals.forEach((item) => {
+      const ind = temp.findIndex(
+        (tempItem) => tempItem.location === item.location
+      );
+      if (ind === -1) {
+        temp.push({
+          coordinate: item.latAndLong,
+          title: 1,
+        });
+      } else {
+        temp[ind].title = temp[ind].title + 1;
+      }
+    });
+    setParsedMarkers([...temp]);
+  }, [journals]);
   return (
     <MapView
       style={styles.mapView}
@@ -99,29 +116,16 @@ const Map = ({ navigation }) => {
       showsUserLocation
       showsScale
       userLocationAnnotationTitle="You are here"
-      onPress={selectLocationHandler}
+      onLongPress={selectLocationHandler}
     >
-      {journals.map(
-        (item) =>
-          item?.latAndLong?.latitude && (
-            <Marker
-              key={item.id}
-              coordinate={{
-                latitude: item?.latAndLong.latitude,
-                longitude: item?.latAndLong.longitude,
-              }}
-              title={item.location}
-            />
-          )
-      )}
-      {userLocation?.latitude && (
+      {parsedMarkers.map((item) => (
         <Marker
-          coordinate={{
-            ...userLocation,
-          }}
-          title="Your Location"
+          key={item?.id}
+          coordinate={item.coordinate}
+          title={`${item.title}`}
+          tracksViewChanges={false}
         />
-      )}
+      ))}
     </MapView>
   );
 };

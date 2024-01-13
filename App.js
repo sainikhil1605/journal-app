@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import { AppProvider } from "./utils/store";
 import Colors from "./constants/colors.json";
 import DayModal from "./components/DayModal";
+import { LogBox } from "react-native";
 const Tab = createBottomTabNavigator();
 
 const Stack = createStackNavigator();
@@ -21,6 +22,7 @@ const Stack = createStackNavigator();
 export default function App() {
   const sysTheme = useColorScheme();
   const [theme, setTheme] = useState("dark");
+  LogBox.ignoreAllLogs();
   function AddJournalModal() {
     return (
       <Tab.Navigator

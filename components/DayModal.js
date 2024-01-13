@@ -2,23 +2,18 @@ import { useContext } from "react";
 import { Modal, View, Text, StyleSheet } from "react-native";
 import { Card, List } from "react-native-paper";
 import { AppContext } from "../utils/store";
-import { formatDateToUS, formatTimeTo12Hr } from "../utils/date";
+import { formatDate, formatTimeTo12Hr } from "../utils/date";
 import IconButton from "./IconButton";
 import Button from "./Button";
 
 const DayModal = ({ navigation, route }) => {
   const { journals, theme } = useContext(AppContext);
   const { day } = route?.params;
-  console.log(day);
 
   const selectedJournals = journals.filter((item) => {
-    const currDate = new Date(item.dateAndTime);
+    const currDate = formatDate(new Date(item.dateAndTime));
 
-    return (
-      currDate.getDay() === day.day &&
-      currDate.getMonth() === day.month &&
-      currDate.getFullYear() === day.year
-    );
+    return currDate === day.dateString;
   });
   const handleSubmit = () => {
     navigation.navigate("TimeLine");
