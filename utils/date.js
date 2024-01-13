@@ -9,4 +9,21 @@ function formatDate(date) {
 
   return [year, month, day].join("-");
 }
-export { formatDate };
+const formatTimeTo12Hr = (date) => {
+  return new Date(date).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+const formatDateToUS = (date) => {
+  const parsedDate = new Date(date);
+  return (
+    parsedDate.getYear() +
+    "-" +
+    parsedDate.getMonth() +
+    "-" +
+    parsedDate.getDay()
+  );
+};
+export { formatDate, formatTimeTo12Hr, formatDateToUS };

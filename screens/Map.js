@@ -9,7 +9,8 @@ import {
   reverseGeocodeAsync,
 } from "expo-location";
 const Map = ({ navigation }) => {
-  const { theme, setLocation } = useContext(AppContext);
+  const { theme, setLocation, latAndLong, setLatAndLong, journals } =
+    useContext(AppContext);
   const [locationPermissionInfo, requestPermission] =
     useForegroundPermissions();
 
@@ -41,7 +42,10 @@ const Map = ({ navigation }) => {
           latitude: location.coords.latitude,
           longitude: location.coords.longitude,
         });
-
+        setLatAndLong({
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude,
+        });
         setLocation(
           address[0].name + " " + address[0].city + " " + address[0].region
         );
@@ -50,6 +54,8 @@ const Map = ({ navigation }) => {
     getUserLocation();
   }, []);
   const selectLocationHandler = async (event) => {
+    const lat = event.nativeEvent.coordinate.latitude;
+    const long = event.nativeEvent.coordinate.longitude;
     setUserLocation({
       latitude: event.nativeEvent.coordinate.latitude,
       longitude: event.nativeEvent.coordinate.longitude,
@@ -66,6 +72,10 @@ const Map = ({ navigation }) => {
         {
           text: "Yes",
           onPress: () => {
+            setLatAndLong({
+              latitude: lat,
+              longitude: long,
+            });
             setLocation(
               address[0].name + " " + address[0].city + " " + address[0].region
             );
@@ -81,7 +91,7 @@ const Map = ({ navigation }) => {
       ]
     );
   };
-
+  console.log(journals);
   return (
     <MapView
       style={styles.mapView}
@@ -91,6 +101,19 @@ const Map = ({ navigation }) => {
       userLocationAnnotationTitle="You are here"
       onPress={selectLocationHandler}
     >
+      {journals.map(
+        (item) =>
+          item?.latAndLong?.latitude && (
+            <Marker
+              key={item.id}
+              coordinate={{
+                latitude: item?.latAndLong.latitude,
+                longitude: item?.latAndLong.longitude,
+              }}
+              title={item.location}
+            />
+          )
+      )}
       {userLocation?.latitude && (
         <Marker
           coordinate={{

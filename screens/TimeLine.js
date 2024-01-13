@@ -8,9 +8,10 @@ import {
   View,
 } from "react-native";
 import { AppContext } from "../utils/store";
-import days from "../constants/days";
+import { days } from "../constants/days";
 import Colors from "../constants/colors.json";
 import LineSeperator from "../components/LineSeperator";
+import { formatTimeTo12Hr } from "../utils/date";
 
 const TimeLine = ({ navigation }) => {
   const { journals, theme } = useContext(AppContext);
@@ -36,11 +37,7 @@ const TimeLine = ({ navigation }) => {
       <View style={[styles.journalCntnr]}>
         <Text style={[{ color: Colors[theme].color }]}>{journal}</Text>
         <Text style={[{ color: Colors[theme].color }]}>
-          {new Date(dateAndTime).toLocaleTimeString("en-US", {
-            hour: "numeric",
-            minute: "2-digit",
-            hour12: true,
-          })}
+          {formatTimeTo12Hr(dateAndTime)}
         </Text>
         <Text style={[{ color: "lightgray" }]}>{location}</Text>
       </View>

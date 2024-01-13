@@ -5,7 +5,7 @@ import {
 } from "expo-image-picker";
 import IconButton from "./IconButton";
 
-const Camera = ({ setImage, onTakeImage }) => {
+const Camera = ({ setImage, onTakeImage, size }) => {
   const [cameraPermissionInfo, requestPermission] = useCameraPermissions();
   const verifyPermissions = async () => {
     if (cameraPermissionInfo.status === PermissionStatus.UNDETERMINED) {
@@ -36,7 +36,7 @@ const Camera = ({ setImage, onTakeImage }) => {
     <IconButton
       name="camera-outline"
       color="black"
-      size={55}
+      size={size || 55}
       style={{
         paddingLeft: 25,
         paddingRight: 25,

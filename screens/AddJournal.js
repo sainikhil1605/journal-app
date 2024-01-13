@@ -4,6 +4,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Modal,
+  Platform,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -19,6 +20,7 @@ import IconButton from "../components/IconButton";
 import { StatusBar } from "expo-status-bar";
 import ImagePicker from "../components/ImagePicker";
 import Camera from "../components/Camera";
+import { formatTimeTo12Hr } from "../utils/date";
 
 const AddJournal = ({ navigation, route }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -34,46 +36,28 @@ const AddJournal = ({ navigation, route }) => {
         setJournals((prev) =>
           prev.map((item) => {
             if (item.id === params.id) {
-              if (image) {
-                return {
-                  ...item,
-                  journal: journal.trim(),
-                  image: image,
-                };
-              } else {
-                return {
-                  ...item,
-                  journal: journal.trim(),
-                };
-              }
+              return {
+                ...item,
+                journal: journal.trim(),
+                ...(image && { image: image }),
+              };
             }
             return item;
           })
         );
       } else {
-        if (image) {
-          setJournals((prev) => [
-            ...prev,
-            {
-              id: Math.random(),
-              journal: journal,
-              dateAndTime: new Date(),
-              image: image,
-              location: location,
-            },
-          ]);
-        } else {
-          console.log(location);
-          setJournals((prev) => [
-            ...prev,
-            {
-              id: Math.random(),
-              journal: journal,
-              dateAndTime: new Date(),
-              location: location,
-            },
-          ]);
-        }
+        setJournals((prev) => [
+          ...prev,
+          {
+            id: Math.random(),
+            journal: journal,
+            ...(params?.date
+              ? { dateAndTime: new Date(params?.date) }
+              : { dateAndTime: new Date() }),
+            ...(image && { image: image }),
+            location: location,
+          },
+        ]);
       }
     }
     navigation.navigate("TimeLine");
@@ -105,7 +89,17 @@ const AddJournal = ({ navigation, route }) => {
       keyboardDidHideListener.remove();
     };
   }, []);
-
+  const getCurrentJournal = (id) => {
+    return journals.find((item) => item.id === id);
+  };
+  const MenuItems = [
+    {
+      text: "Move to trash",
+      icon: "trash-outline",
+      onPress: () => console.log("trash"),
+    },
+  ];
+  console.log(params?.date);
   return (
     <SafeAreaView style={{ paddingTop: insets.top, flex: 1 }}>
       <StatusBar style={theme === "dark" ? "dark" : "light"} />
@@ -115,14 +109,18 @@ const AddJournal = ({ navigation, route }) => {
           { backgroundColor: Colors[theme].background },
         ]}
       >
-        <View
-          style={[styles.header, { backgroundColor: Colors[theme].header }]}
-        >
-          <Text style={[styles.text]}>{new Date().toDateString()}</Text>
-          <Button title="Done" onPress={() => handleSubmit()} />
+        <View style={[styles.header]}>
+          <Text style={[styles.text]}>
+            {params?.date
+              ? new Date(params?.date).toDateString()
+              : new Date().toDateString()}
+          </Text>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Button title="Done" onPress={() => handleSubmit()} />
+          </View>
         </View>
-        <KeyboardAvoidingView behavior="padding">
-          <ScrollView style={styles.inputText} keyboardDismissMode="on-drag">
+        <KeyboardAvoidingView>
+          <ScrollView style={[styles.inputText]} keyboardDismissMode="on-drag">
             <TextInput
               style={[
                 styles.text,
@@ -140,16 +138,16 @@ const AddJournal = ({ navigation, route }) => {
             {image && <Image style={{ height: 300 }} source={{ uri: image }} />}
           </ScrollView>
         </KeyboardAvoidingView>
-        {isKeyboardVisible && (
+        {isKeyboardVisible && !journal && (
           <View
             style={[
               {
                 borderColor: Colors[theme].color,
                 position: "absolute",
-                // left: 0,
+                left: 0,
               },
               {
-                bottom: 1,
+                bottom: Platform.OS === "ios" ? keyBoardHeight - 40 : 0,
                 flexDirection: "row",
                 paddingBottom: 10,
               },
@@ -172,6 +170,49 @@ const AddJournal = ({ navigation, route }) => {
             <View>
               <Camera setImage={setImage} />
             </View>
+          </View>
+        )}
+        {journal && (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              position: "absolute",
+              bottom: Platform.OS === "ios" ? keyBoardHeight - 30 : 0,
+            }}
+          >
+            <Text style={[styles.text, { paddingLeft: 10 }]}>
+              {params?.id
+                ? formatTimeTo12Hr(getCurrentJournal(params.id).dateAndTime)
+                : formatTimeTo12Hr(new Date())}
+            </Text>
+            {isKeyboardVisible && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "flex-end",
+                  flex: 1,
+                }}
+              >
+                <View
+                  style={{
+                    paddingRight: 25,
+                    paddingLeft: 25,
+                  }}
+                >
+                  <ImagePicker
+                    name="images-outline"
+                    size={25}
+                    setImage={setImage}
+                  />
+                </View>
+                <View>
+                  <Camera setImage={setImage} size={25} />
+                </View>
+              </View>
+            )}
           </View>
         )}
       </View>

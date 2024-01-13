@@ -13,6 +13,7 @@ import Calendar from "./screens/Calendar";
 import { useEffect, useState } from "react";
 import { AppProvider } from "./utils/store";
 import Colors from "./constants/colors.json";
+import DayModal from "./components/DayModal";
 const Tab = createBottomTabNavigator();
 
 const Stack = createStackNavigator();
@@ -77,11 +78,7 @@ export default function App() {
             header: () => null,
             tabBarVisible: false,
             tabBarIcon: ({ focused }) => (
-              <Ionicons
-                name={focused ? "add-circle" : "add-circle-outline"}
-                size={24}
-                color={Colors[theme].color}
-              />
+              <Ionicons name={"add-circle"} size={35} color={"skyblue"} />
             ),
           }}
         />
@@ -125,7 +122,11 @@ export default function App() {
       >
         <NavigationContainer>
           <Stack.Navigator
-            screenOptions={{ presentation: "modal", headerShown: false }}
+            screenOptions={{
+              presentation: "modal",
+              headerShown: false,
+              animation: "slide_from_bottom",
+            }}
           >
             <Stack.Screen name="Home" component={AddJournalModal} />
             <Stack.Screen
@@ -141,6 +142,7 @@ export default function App() {
                 ),
               })}
             />
+            <Stack.Screen name="JournalDayModal" component={DayModal} />
           </Stack.Navigator>
         </NavigationContainer>
       </AppProvider>

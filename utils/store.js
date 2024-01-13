@@ -7,14 +7,25 @@ const AppContext = createContext({
   setJournals: () => {},
   location: null,
   setLocation: () => {},
+  latAndLong: null,
+  setLatAndLong: () => {},
 });
 
 const AppProvider = ({ value, children }) => {
   const [journals, setJournals] = useState([]);
   const [location, setLocation] = useState(null);
+  const [latAndLong, setLatAndLong] = useState(null);
   return (
     <AppContext.Provider
-      value={{ ...value, journals, setJournals, location, setLocation }}
+      value={{
+        ...value,
+        journals,
+        setJournals,
+        location,
+        setLocation,
+        latAndLong,
+        setLatAndLong,
+      }}
     >
       {children}
     </AppContext.Provider>
