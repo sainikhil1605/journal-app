@@ -12,7 +12,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppContext } from "../utils/store";
 import Colors from "../constants/colors.json";
 import Button from "../components/Button";
@@ -21,7 +20,7 @@ import { StatusBar } from "expo-status-bar";
 import ImagePicker from "../components/ImagePicker";
 import Camera from "../components/Camera";
 import { formatTimeTo12Hr } from "../utils/date";
-
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 const AddJournal = ({ navigation, route }) => {
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
   const [keyBoardHeight, setKeyBoardHeight] = useState(0);

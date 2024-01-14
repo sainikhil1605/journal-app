@@ -16,17 +16,24 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "bundleIdentifier": "com.sainikhil1605.journalapp"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "userInterfaceStyle": "automatic"
+      "userInterfaceStyle": "automatic",
+      "package": "com.sainikhil1605.journalapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "2c1c05ac-9e17-4f4f-940f-49d5c9884ee7"
+      }
     }
   }
 }

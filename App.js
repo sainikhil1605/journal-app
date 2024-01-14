@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { Button, StyleSheet, useColorScheme } from "react-native";
+import { Button, SafeAreaView, StyleSheet, useColorScheme } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import TimeLine from "./screens/TimeLine";
@@ -8,7 +8,6 @@ import { Ionicons } from "@expo/vector-icons";
 import AddJournal from "./screens/AddJournal";
 import Map from "./screens/Map";
 import { createStackNavigator } from "@react-navigation/stack";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 import Calendar from "./screens/Calendar";
 import { useEffect, useState } from "react";
 import { AppProvider } from "./utils/store";
@@ -115,7 +114,7 @@ export default function App() {
     );
   }
   return (
-    <SafeAreaProvider>
+    <>
       <StatusBar style={theme === "dark" ? "light" : "dark"} />
       <AppProvider
         value={{
@@ -148,7 +147,7 @@ export default function App() {
           </Stack.Navigator>
         </NavigationContainer>
       </AppProvider>
-    </SafeAreaProvider>
+    </>
   );
 }
 const styles = StyleSheet.create({
